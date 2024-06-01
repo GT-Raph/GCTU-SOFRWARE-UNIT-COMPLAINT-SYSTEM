@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'complaints',
     'crispy_forms', # For form rendering 
+    'jchart',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'  # Use 'bootstrap4' for Bootstrap styling

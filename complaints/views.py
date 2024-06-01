@@ -13,16 +13,34 @@ from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from django.utils import timezone
+from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
+from django.db import models
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    read = models.BooleanField(default=False)
+
+# Then, in your view:
 def file_complaint(request):
     if request.method == 'POST':
         form = ComplaintForm(request.POST)
         if form.is_valid():
             form.save()
+            # get all logged in users
+            sessions = Session.objects.filter(expire_date__gte=timezone.now())
+            user_id_list = []
+            for session in sessions:
+                data = session.get_decoded()
+                user_id_list.append(data.get('_auth_user_id', None))
+            logged_in_users = User.objects.filter(id__in=user_id_list)
+            # add a notification for each logged in user
+            for user in logged_in_users:
+                Notification.objects.create(user=user, message='A new complaint has been submitted.')
             return redirect('submit_successful')
     else:
         form = ComplaintForm()
-
     return render(request, 'complaints/file_complaint.html', {'form': form})
 
 @login_required(login_url='login')
@@ -205,3 +223,23 @@ def complaint_detail(request, complaint_id):
     complaint = get_object_or_404(Complaint, id=complaint_id)
     serialized_data = serialize_complaint(complaint)
     return JsonResponse(serialized_data)
+
+def complaint_form_submit(request):
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST)
+        if form.is_valid():
+            complaint = form.save()
+            # get all logged in users
+            sessions = Session.objects.filter(expire_date__gte=timezone.now())
+            user_id_list = []
+            for session in sessions:
+                data = session.get_decoded()
+                user_id_list.append(data.get('_auth_user_id', None))
+            logged_in_users = User.objects.filter(id__in=user_id_list)
+            # add a message for each logged in user
+            for user in logged_in_users:
+                messages.success(user, 'A new complaint has been submitted.')
+            return redirect('complaint_detail', complaint_id=complaint.id)
+    else:
+        form = ComplaintForm()
+    return render(request, 'complaint_form.html', {'form': form})
