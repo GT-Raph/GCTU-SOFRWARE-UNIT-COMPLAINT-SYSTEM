@@ -3,7 +3,7 @@ from django.urls import path
 from django.utils.html import format_html
 from django.contrib import admin
 from django.shortcuts import HttpResponseRedirect
-from .models import Complaint, Category, UserProfile, StudentLevel, StudentLevelType
+from .models import Complaint, Category, StudentLevel, StudentLevelType
 from .forms import ComplaintForm
 import requests
 
@@ -111,20 +111,17 @@ class CategoryAdmin(admin.ModelAdmin):
     list_editable = ('is_active',)
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('username', 'full_name', 'email', 'display_profile_picture')
-    readonly_fields = ('username', 'full_name', 'email')
+    list_display = ('username', 'email', 'profile_picture')
+    readonly_fields = ('username', 'email')
 
-    def display_profile_picture(self, obj):
-        if obj.profile_picture:
-            return format_html('<img src="{}" width="50" height="50" />', obj.profile_picture)
-        else:
-            return "No Image"
-    display_profile_picture.short_description = 'Profile Picture'
-    
+    def username(self, obj):
+        return obj.user.username
+
+    def email(self, obj):
+        return obj.user.email
 
 
 admin.site.register(StudentLevel)
 admin.site.register(StudentLevelType)
-admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Complaint, ComplaintAdmin)
 admin.site.register(Category, CategoryAdmin)

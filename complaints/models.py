@@ -7,24 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.files.base import ContentFile
 import base64
-import uuid
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='user_images/profile_pictures/', blank=True, null=True)
-    
-    @property
-    def username(self):
-        return self.user.username
-
-    @property
-    def full_name(self):
-        return f"{self.user.first_name} {self.user.last_name}"
-
-    @property
-    def email(self):
-        return self.user.email
-    # add additional fields here
+import uuid  
     
 
 class Category(models.Model):
@@ -78,11 +61,3 @@ class CustomUser(AbstractUser):
     user_permissions = models.ManyToManyField(Permission, blank=True, related_name='customuser_set')
     
     
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
