@@ -2,7 +2,6 @@
 from django.urls import path
 from . import views
 from .views import mark_complaint_as_solved
-from .admin_site import user_admin_site
 
 urlpatterns = [
     path('complaint_list/', views.complaint_list, name='complaint_list'),

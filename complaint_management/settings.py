@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'complaints.apps.YourAppNameConfig',
+    'complaints',
     'crispy_forms', # For form rendering 
 ]
 
@@ -67,19 +67,19 @@ WSGI_APPLICATION = 'complaint_management.wsgi.application'
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': BASE_DIR / 'db.sqlite3',
+         #'ENGINE': 'django.db.backends.sqlite3',
+         #'NAME': BASE_DIR / 'db.sqlite3',
     
         # MYSQL DATABASE
-        #'ENGINE': 'django.db.backends.mysql',
-        #'NAME': 'gctu_software_unit_complaint',
-        #'USER': 'root',
-        #'PASSWORD': '',
-        #'HOST': 'localhost',
-        #'PORT': '3306',
-        #'OPTIONS': {
-        #    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        #},
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gctu_software_unit_complaint',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
