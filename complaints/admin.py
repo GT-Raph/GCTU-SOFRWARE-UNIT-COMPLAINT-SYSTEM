@@ -3,6 +3,8 @@ from django.urls import path
 from django.utils.html import format_html
 from django.contrib import admin
 from django.shortcuts import HttpResponseRedirect
+from django.db.models import Count
+from django.shortcuts import render
 from .models import Complaint, Category, StudentLevel, StudentLevelType
 from .forms import ComplaintForm
 import requests

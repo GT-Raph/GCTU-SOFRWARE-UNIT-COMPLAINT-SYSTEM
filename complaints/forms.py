@@ -2,13 +2,15 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+from django.core.validators import RegexValidator
 from .models import Complaint, Category, StudentLevel, StudentLevelType
 
 class ComplaintForm(forms.ModelForm):
     # Add fields for Student Level and Student Level Type
     student_level = forms.ModelChoiceField(queryset=StudentLevel.objects.all())
     student_level_type = forms.ModelChoiceField(queryset=StudentLevelType.objects.all())
-    phone_number = forms.CharField(label='Phone Number', max_length=15)  # Add the phone_number field
+    phone_regex = r'^\+?1?\d{9,15}$'
+    phone_number = forms.CharField(validators=[RegexValidator(phone_regex)])
 
     class Meta:
         model = Complaint
