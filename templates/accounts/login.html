@@ -1,0 +1,18 @@
+<!-- complaints/templates/accounts/login.html -->
+{% extends 'complaints/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h1>Login</h1>
+        <form method="post" action="{% url 'login' %}" class="form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mt-3">Login</button>
+        </form>
+        <br>
+        <!-- Use the correct URL for password reset -->
+        <a href="{% url 'password_reset' %}" class="btn btn-link">Forgot Password?</a>
+    </div>
+{% endblock %}

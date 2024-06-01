@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complaint Management</title>
+    <style>
+      /* Add your custom styles for the form */
+      body {
+        font-family: Arial, sans-serif;
+        background-image: url("../../static/Assets/maxresdefault.jpg");
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .form-container {
+        max-width: 500px; /* Increase the maximum width */
+        width: 80%; /* Adjust the width as needed */
+        height: 100%; /* Allow height to adjust based on content */
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #007bff;
+      }
+
+      form {
+        margin-top: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      input[type="text"],
+      select {
+        width: calc(
+          100% - 22px
+        ); /* Adjust width to account for padding and borders */
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        width: calc(
+          100% - 22px
+        ); /* Adjust width to account for padding and borders */
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        box-sizing: border-box;
+        resize: vertical; /* Allow vertical resizing */
+        height: 100px; /* Set initial height */
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .btn-link {
+        text-decoration: none;
+        color: #007bff;
+        margin-right: 10px;
+        display: block;
+        text-align: center;
+      }
+
+      .btn-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Added Flexbox CSS */
+      .form-group.flex-container {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .form-group.flex-container .form-group {
+        width: calc(
+          50% - 10px
+        ); /* Adjust width to fit two items side by side */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>File a Complaint</h1>
+      <form method="post" action="{% url 'file_complaint' %}" class="form">
+        {% csrf_token %}
+
+        <!-- Flex container for Name, Index No., and Phone Number -->
+        <div class="form-group flex-container">
+          <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Name:</label>
+            {{ form.name }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.student_id.id_for_label }}">Index No.:</label>
+            <!-- Change to Index -->
+            {{ form.student_id }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.phone_number.id_for_label }}"
+              >Phone Number:</label
+            >
+            <!-- Add Phone Number field -->
+            {{ form.phone_number }}
+          </div>
+        </div>
+
+        <!-- Flex container for Student Level and Student Level Type -->
+        <div class="form-group flex-container">
+          <div class="form-group">
+            <label for="{{ form.student_level.id_for_label }}"
+              >Student Level:</label
+            >
+            <!-- Add Student Level field -->
+            {{ form.student_level }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.student_level_type.id_for_label }}"
+              >Student Level Type:</label
+            >
+            <!-- Add Student Level Type field -->
+            {{ form.student_level_type }}
+          </div>
+        </div>
+
+        <div class="form-group flex-container">
+          <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">Category:</label>
+            {{ form.category }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.status.id_for_label }}">Status:</label>
+            {{ form.status }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.description.id_for_label }}">Description:</label>
+          <textarea
+            id="{{ form.description.id_for_label }}"
+            name="{{ form.description.name }}"
+            rows="5"
+            placeholder="Enter description"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Complaint</button>
+      </form>
+    </div>
+    <script>
+      const sendSMS = (phoneNumber, message) => {
+        const sender = "GCTU";
+
+        const formData = new FormData();
+        formData.append("phoneNumber", phoneNumber);
+        formData.append("message", message);
+        formData.append("sender", sender);
+
+        axios
+          .post("https://erp.gctu.edu.gh/getinformation/send_sms.php", formData)
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const phoneNumber = document.getElementById("phone_number").value;
+
+        sendSMS(
+          phoneNumber,
+          `Hello ${name}. Your complaint will be processed and solved soon.`
+        );
+      };
+    </script>
+  </body>
+</html>

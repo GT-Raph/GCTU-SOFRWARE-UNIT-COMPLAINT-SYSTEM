@@ -1,0 +1,92 @@
+/* Resetting default margin and padding */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Styling for page content */
+.page-content {
+    width: 100%;
+    margin: 0 auto;
+    background: #75e2e9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for form content */
+.form-v4-content {
+    background: #fff;
+    width: 90%;
+    max-width: 1250px;
+    border-radius: 10px;
+    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Styling for form left side */
+.form-left {
+    background: #3786bd;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding: 20px 40px;
+    color: #fff;
+    text-align: center;
+}
+
+/* Styling for form right side */
+.form-detail {
+    width: 100%;
+    padding: 20px;
+}
+
+/* Styling for form elements */
+.input-text {
+    width: calc(100% - 10px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+textarea {
+    width: calc(100% - 10px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Styling for select dropdown */
+select {
+    width: calc(100% - 10px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Styling for register button */
+.register {
+    background: #3786bd;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.register:hover {
+    background: #2f73a3;
+}

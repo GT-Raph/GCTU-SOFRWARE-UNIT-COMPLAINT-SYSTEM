@@ -1,0 +1,79 @@
+<!-- complaints/templates/complaints/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Complaint Management{% endblock %}</title>
+    <!-- Add Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'complaints/styles.css' %}">
+    <!-- Add additional styles for the form -->
+    <style>
+        /* Add your custom styles for the form */
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'complaint_list' %}">View Complaints</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'file_complaint' %}">File a Complaint</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Full Chart</a>
+                    </li>
+                </ul>
+                {% if not request.path == '/login/' %}
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                            <form id="logoutForm" method="post" action="{% url 'logout' %}?next={% url 'logout_success' %}" style="display: none;">
+                                {% csrf_token %}
+                            </form>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        <main class="mt-5">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="mt-6">
+            <!-- Add your footer content here -->
+        </footer>
+    </div>
+
+    <!-- Add Bootstrap JS CDN and Popper.js CDN -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        function logout() {
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+</body>
+</html>
