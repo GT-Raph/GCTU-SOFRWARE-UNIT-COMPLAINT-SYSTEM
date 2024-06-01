@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        input[type="text"],
+        select {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"],
+        a {
+            display: inline-block;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            margin-top: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Style buttons as secondary with different color */
+        a.action-links {
+            background-color: #007bff;
+        }
+
+        .container {
+            height: fit-content;
+            width: fit-content;
+            /* Adjust the width as needed */
+            margin: 0 auto;
+            /* Center the container horizontally */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            /* Add border-radius for curved corners */
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .solve-checkbox {
+            width: 20px;
+            height: 20px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .reset-link,
+        .action-links {
+            display: inline-block;
+            padding: 10px 20px;
+            /* Add padding to the links */
+            background-color: #28a745;
+            /* Change the background color */
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            /* Add some space between the links */
+        }
+
+        .reset-link:hover,
+        .action-links:hover {
+            background-color: #007bff;
+            /* Change the background color on hover */
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+    <h1>COMPLAINTS</h1>
+
+    <form method="get">
+        <label for="date">Filter by Date:</label>
+        <input type="date" id="datepicker" name="date" value="{{ request.GET.date }}">
+        <label for="status">Filter by Status:</label>
+        <select id="status" name="status">
+            <option value="">All</option>
+            <option value="Solved" {% if request.GET.status == 'Solved' %}selected{% endif %}>Solved</option>
+            <option value="Unsolved" {% if request.GET.status == 'Unsolved' %}selected{% endif %}>Unsolved</option>
+            <option value="Pending" {% if request.GET.status == 'Pending' %}selected{% endif %}>Pending</option>
+        </select>
+        <label for="category">Filter by Category:</label>
+        <select name="category">
+            <option value="" {% if not request.GET.category %}selected{% endif %}>All</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="level">Filter by Level:</label>
+        <select name="level">
+            <option value="" {% if not request.GET.level %}selected{% endif %}>All</option>
+            {% for level in levels %}
+                <option value="{{ level.level }}" {% if request.GET.level == level.level %}selected{% endif %}>{{ level.level }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Apply Filters">
+    </form>
+
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Student ID</th>
+                    <th>Phone Number</th>
+                    <th>Student Level</th> <!-- New column -->
+                    <th>Student Level Type</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for complaint in page_obj %}
+                <tr>
+                    <td>{{ complaint.name }}</td>
+                    <td>{{ complaint.student_id }}</td>
+                    <td>{{ complaint.phone_number }}</td>
+                    <td>{{ complaint.student_level }}</td>
+                    <td>{{ complaint.student_level_type }}</td>
+                    <td>{{ complaint.category.name }}</td>
+                    <td>{{ complaint.description }}</td>
+                    <td>{{ complaint.status }}</td>
+                    <td>{{ complaint.created_at }}</td>
+                    <td>
+                        {% if complaint.status != 'Solved' %}
+                            <a href="{% url 'mark_complaint_as_solved' complaint.id %}" class="btn btn-primary">Mark as Solved</a>
+                        {% else %}
+                            <button disabled class="btn btn-success">Solved</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="current-page">{{ page_obj.number }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'complaint_list' %}" class="reset-link">Reset Filters</a>
+        <a href="{% url 'file_complaint' %}" class="action-links">File a Complaint</a>
+        <a href="{% url 'dashboard' %}" class="action-links">Dashboard</a>
+        <a href="{% url 'export_complaints' %}" class="action-links">Export to Excel</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Initialize datepickers
+        $("#datepickerDay").datepicker({ dateFormat: "dd" });
+        $("#datepickerMonth").datepicker({ dateFormat: "mm" });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+<!-- complaints/templates/bootstrap4/uni_form.html -->
+{% load crispy_forms_tags %}
+
+{% block crispy %}
+    {% if form_show_errors %}
+        {{ form.errors }}
+    {% endif %}
+
+    {% if form_show_labels %}
+        {% if form.label and form_show_labels != 'sr-only' %}
+            <label class="{{ form_label_class }}">{{ form.label|safe }}</label>
+        {% endif %}
+    {% endif %}
+
+    {{ form|crispy }}
+
+    {% if form_show_labels == 'sr-only' %}
+        <label class="{{ form_label_class }}">{{ form.label|safe }}</label>
+    {% endif %}
+{% endblock %}

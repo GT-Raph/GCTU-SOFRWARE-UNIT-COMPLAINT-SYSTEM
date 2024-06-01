@@ -1,0 +1,18 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block crispy %}
+  {% if form_show_errors %}
+    {{ form.errors }}
+  {% endif %}
+
+  <form method="{{ form.form_method|default:'post' }}" action="{{ form.form_action|default:'' }}" enctype="{{ form.form_enctype|default:'multipart/form-data' }}" class="{% if form.form_class %}{{ form.form_class }}{% endif %}" id="{{ form.form_id|default:'' }}">
+    {% if form.form_tag %}<div{% if form.form_class %} class="{{ form.form_class }}"{% endif %}{% if form.form_id %} id="{{ form.form_id }}"{% endif %}>{% csrf_token %}{% endif %}
+      {{ form|crispy }}
+      {% if form.helper %}
+        {% crispy form form.helper %}
+      {% endif %}
+
+      {% if form.form_tag %}</div>{% endif %}
+  </form>
+{% endblock crispy %}
