@@ -12,12 +12,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.core.management.utils import get_random_secret_key
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-^dyp4+bkkup4)7)oy-m64q!qz-p$!y&izclyxkgae$bg=1+xr5'
+SECRET_KEY = os.environ.get('SECRET_KEY') or get_random_secret_key()
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False').strip().lower() == 'true'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '', '', '', '']
 
